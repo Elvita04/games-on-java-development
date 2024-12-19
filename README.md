@@ -1,4 +1,71 @@
-# games-on-java-development
-Quiz game using Java:The Question class represents a quiz question with a text, an array of answer options, and the index of the correct answer. It includes a constructor to initialize these values and methods to retrieve the question, options, and check if a given answer is correct. This class is used in the QuizGame to manage and present each question to the player, verifying the player's answer and updating the score accordingly. The game flow involves asking questions, accepting user input, and displaying feedback after each answer.
-Rockpaperscissior using Java:The choices array in the RockPaperScissors game holds the three possible moves in the game: "rock", "paper", and "scissors". These are used to represent the player's and computer's selections. The array helps simplify the process of randomly choosing a move for the computer, where the random.nextInt(3) function generates an index (0, 1, or 2) to select one of these three options. The array is a key part of the game's logic for determining the outcome based on the user's input and the computer's random choice.
-Snake game:The SnakeGame class is a graphical implementation of the classic Snake game using Java Swing. The game consists of a snake that moves around the screen, eating food (represented by red squares) to grow longer while avoiding collisions with walls and itself. The game board is a grid where each tile is a 30x30 pixel square. The snake is represented by a list of Point objects, and the food is also a Point placed randomly on the board.
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class QuizGame {
+
+    static class Question {
+        private final String question;
+        private final String[] options;
+        private final int correctAnswerIndex;
+
+        public Question(String question, String[] options, int correctAnswerIndex) {
+            this.question = question;
+            this.options = options;
+            this.correctAnswerIndex = correctAnswerIndex;
+        }
+
+        public String getQuestion() {
+            return question;
+        }
+
+        public String[] getOptions() {
+            return options;
+        }
+
+        public boolean isAnswerCorrect(int answerIndex) {
+            return answerIndex == correctAnswerIndex;
+        }
+    }
+
+    public static void main(String[] args) {
+        List<Question> questions = new ArrayList<>();
+        questions.add(new Question("What is the capital of France?", new String[]{"1. Paris", "2. London", "3. Berlin", "4. Madrid"}, 0));
+        questions.add(new Question("What is 2 + 2?", new String[]{"1. 3", "2. 4", "3. 5", "4. 6"}, 1));
+        questions.add(new Question("What is the largest ocean?", new String[]{"1. Atlantic", "2. Indian", "3. Arctic", "4. Pacific"}, 3));
+
+        Scanner scanner = new Scanner(System.in);
+        int score = 0;
+
+        System.out.println("Welcome to the Quiz Game!");
+        System.out.println("You will be asked 3 questions. Choose the correct option by typing the number.");
+
+        for (int i = 0; i < questions.size(); i++) {
+            Question question = questions.get(i);
+
+            System.out.println("\nQuestion " + (i + 1) + ": " + question.getQuestion());
+            for (String option : question.getOptions()) {
+                System.out.println(option);
+            }
+
+            System.out.print("Your answer (1-4): ");
+            int userAnswer = scanner.nextInt() - 1;
+
+            if (userAnswer >= 0 && userAnswer < question.getOptions().length) {
+                if (question.isAnswerCorrect(userAnswer)) {
+                    System.out.println("Correct!");
+                    score++;
+                } else {
+                    System.out.println("Incorrect. The correct answer was option " + (question.correctAnswerIndex + 1) + ".");
+                }
+            } else {
+                System.out.println("Invalid option. Please choose a number between 1 and 4.");
+            }
+        }
+
+        System.out.println("\nGame Over!");
+        System.out.println("Your score: " + score + "/" + questions.size());
+
+        scanner.close();
+    }
+}
